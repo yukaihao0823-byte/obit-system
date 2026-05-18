@@ -261,7 +261,9 @@ body::before {
   async function checkAllowed(db, uid) {
     try {
       const snap = await getDoc(doc(db, 'users', uid));
-      return snap.exists() && snap.data().role !== 'blocked';
+      if (!snap.exists()) return false;
+      const role = snap.data().role;
+      return role === 'admin' || role === 'staff';
     } catch { return false; }
   }
 
