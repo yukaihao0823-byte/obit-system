@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登入 — 電子訃聞管理系統</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1a2744;
+  --navy2: #253660;
+  --gold: #b8965a;
+  --gold2: #d4b07a;
+  --cream: #f8f4ee;
+  --border: #e0d8cc;
+  --muted: #9a9488;
+  --red: #c0404040;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: linear-gradient(145deg, #0e1828 0%, #1a2744 50%, #0e1828 100%);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 24px;
+  position: relative; overflow: hidden;
+}
+
+/* 背景裝飾 */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 30%, rgba(184,150,90,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 80% 70%, rgba(37,54,96,0.6) 0%, transparent 70%);
+  pointer-events: none;
+}
+.bg-deco {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; overflow: hidden;
+}
+.bg-deco span {
+  position: absolute; font-size: 120px; opacity: 0.03;
+  animation: drift 20s ease-in-out infinite;
+}
+.bg-deco span:nth-child(1) { top: 5%; left: 5%; animation-delay: 0s; }
+.bg-deco span:nth-child(2) { top: 60%; right: 8%; animation-delay: -7s; }
+.bg-deco span:nth-child(3) { bottom: 10%; left: 40%; animation-delay: -14s; }
+@keyframes drift {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+/* 卡片 */
+.card {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 20px;
+  width: 100%; max-width: 400px;
+  padding: 44px 40px 36px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+  position: relative; z-index: 1;
+  animation: slideUp 0.5s ease both;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.logo-area {
+  text-align: center; margin-bottom: 32px;
+}
+.logo-icon {
+  font-size: 36px; margin-bottom: 10px; display: block;
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.logo-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 20px; color: var(--gold2);
+  letter-spacing: 4px; margin-bottom: 4px;
+}
+.logo-sub {
+  font-size: 12px; color: rgba(255,255,255,0.35);
+  letter-spacing: 2px;
+}
+
+/* 表單 */
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block; font-size: 11px; color: rgba(255,255,255,0.45);
+  letter-spacing: 2px; font-weight: 600; margin-bottom: 7px;
+}
+.form-group input {
+  width: 100%; padding: 12px 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 10px; color: rgba(255,255,255,0.9);
+  font-size: 14px; font-family: 'Noto Sans TC', sans-serif;
+  outline: none; transition: all 0.2s;
+}
+.form-group input::placeholder { color: rgba(255,255,255,0.2); }
+.form-group input:focus {
+  border-color: var(--gold); background: rgba(255,255,255,0.09);
+}
+
+.forgot-link {
+  text-align: right; margin-top: -8px; margin-bottom: 20px;
+}
+.forgot-link a {
+  font-size: 11px; color: rgba(255,255,255,0.35);
+  text-decoration: none; letter-spacing: 1px;
+  transition: color 0.2s;
+}
+.forgot-link a:hover { color: var(--gold2); }
+
+.btn-login {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, var(--gold) 0%, #9a7840 100%);
+  color: var(--navy); border: none; border-radius: 10px;
+  font-family: 'Noto Serif TC', serif; font-size: 15px;
+  font-weight: 700; letter-spacing: 3px; cursor: pointer;
+  transition: all 0.2s; margin-bottom: 14px;
+  box-shadow: 0 4px 20px rgba(184,150,90,0.3);
+}
+.btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(184,150,90,0.4); }
+.btn-login:active { transform: translateY(0); }
+.btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.divider-or {
+  display: flex; align-items: center; gap: 12px; margin: 4px 0 14px;
+}
+.divider-or::before, .divider-or::after {
+  content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1);
+}
+.divider-or span { font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: 2px; }
+
+.btn-google {
+  width: 100%; padding: 12px;
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 10px; color: rgba(255,255,255,0.8);
+  font-family: 'Noto Sans TC', sans-serif; font-size: 14px;
+  letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.btn-google:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); }
+.btn-google:disabled { opacity: 0.5; cursor: not-allowed; }
+.google-icon { width: 18px; height: 18px; }
+
+/* 錯誤訊息 */
+.error-msg {
+  background: rgba(200,60,60,0.15); border: 1px solid rgba(200,60,60,0.3);
+  border-radius: 8px; padding: 10px 14px;
+  color: #ff9090; font-size: 12px; letter-spacing: 1px;
+  margin-bottom: 14px; display: none; line-height: 1.6;
+}
+.error-msg.show { display: block; animation: shake 0.3s ease; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.loading-spinner {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid rgba(26,39,68,0.3);
+  border-top-color: var(--navy);
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+  margin-right: 6px; vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.footer-note {
+  text-align: center; margin-top: 24px;
+  font-size: 11px; color: rgba(255,255,255,0.2);
+  letter-spacing: 1px; line-height: 1.8;
+}
+</style>
+</head>
+<body>
+
+<div class="bg-deco">
+  <span>🕊️</span><span>🌸</span><span>✦</span>
+</div>
+
+<div class="card">
+  <div class="logo-area">
+    <span class="logo-icon">🕊️</span>
+    <div class="logo-title">電子訃聞系統</div>
+    <div class="logo-sub">員工登入</div>
+  </div>
+
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div class="form-group">
+    <label>電子郵件</label>
+    <input type="email" id="emailInput" placeholder="your@company.com" autocomplete="email">
+  </div>
+  <div class="form-group">
+    <label>密碼</label>
+    <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="current-password"
+      onkeydown="if(event.key==='Enter') loginEmail()">
+  </div>
+
+  <div class="forgot-link">
+    <a href="#" onclick="resetPassword(); return false;">忘記密碼？</a>
+  </div>
+
+  <button class="btn-login" id="loginBtn" onclick="loginEmail()">登　入</button>
+
+  <div class="divider-or"><span>或</span></div>
+
+  <button class="btn-google" id="googleBtn" onclick="loginGoogle()">
+    <svg class="google-icon" viewBox="0 0 24 24">
+      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+    </svg>
+    使用 Google 帳號登入
+  </button>
+
+  <div class="footer-note">
+    僅限公司授權員工使用<br>
+    如需新增帳號請聯繫管理員
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // 讀取設定
+  const script = document.createElement('script');
+  script.src = 'firebase-config.js';
+  document.head.appendChild(script);
+  await new Promise(r => script.onload = r);
+
+  const app  = initializeApp(FIREBASE_CONFIG);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  // 已登入則跳轉
+  onAuthStateChanged(auth, async user => {
+    if (user) {
+      const allowed = await checkAllowed(db, user.uid);
+      if (allowed) window.location.href = 'admin.html';
+    }
+  });
+
+  async function checkAllowed(db, uid) {
+    try {
+      const snap = await getDoc(doc(db, 'users', uid));
+      if (!snap.exists()) return false;
+      const role = (snap.data().role || '').toLowerCase().trim();
+      return role !== 'blocked' && role !== '';
+    } catch { return false; }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg; el.classList.add('show');
+  }
+  function clearError() {
+    document.getElementById('errorMsg').classList.remove('show');
+  }
+  function setLoading(loading) {
+    document.getElementById('loginBtn').disabled = loading;
+    document.getElementById('googleBtn').disabled = loading;
+    document.getElementById('loginBtn').innerHTML = loading
+      ? '<span class="loading-spinner"></span> 登入中…'
+      : '登　入';
+  }
+
+  window.loginEmail = async function() {
+    clearError();
+    const email = document.getElementById('emailInput').value.trim();
+    const pass  = document.getElementById('passwordInput').value;
+    if (!email || !pass) { showError('請填寫電子郵件與密碼'); return; }
+    setLoading(true);
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email, pass);
+      const allowed = await checkAllowed(db, cred.user.uid);
+      if (!allowed) {
+        await auth.signOut();
+        showError('此帳號尚未取得授權，請聯繫管理員');
+      } else {
+        window.location.href = 'admin.html';
+      }
+    } catch(e) {
+      const msgs = {
+        'auth/user-not-found': '找不到此帳號',
+        'auth/wrong-password': '密碼錯誤',
+        'auth/invalid-email': '電子郵件格式不正確',
+        'auth/too-many-requests': '登入次數過多，請稍後再試',
+        'auth/invalid-credential': '帳號或密碼錯誤',
+      };
+      showError(msgs[e.code] || '登入失敗：' + e.message);
+    } finally { setLoading(false); }
+  };
+
+  window.loginGoogle = async function() {
+    clearError(); setLoading(true);
+    try {
+      const cred = await signInWithPopup(auth, provider);
+      // 首次登入自動建立 user 文件（待管理員審核）
+      const ref = doc(db, 'users', cred.user.uid);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          email: cred.user.email,
+          name: cred.user.displayName,
+          role: 'pending',
+          createdAt: new Date().toISOString()
+        });
+        await auth.signOut();
+        showError('帳號已建立，請等待管理員授權後再登入');
+        return;
+      }
+      const allowed = snap.data().role !== 'blocked' && snap.data().role !== 'pending';
+      if (!allowed) {
+        await auth.signOut();
+        showError(snap.data().role === 'pending' ? '帳號審核中，請等待管理員授權' : '此帳號已被停用');
+      } else {
+        window.location.href = 'admin.html';
+      }
+    } catch(e) {
+      if (e.code !== 'auth/popup-closed-by-user') showError('Google 登入失敗，請再試一次');
+    } finally { setLoading(false); }
+  };
+
+  window.resetPassword = async function() {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email) { showError('請先填寫電子郵件再重設密碼'); return; }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      const el = document.getElementById('errorMsg');
+      el.style.background = 'rgba(60,180,60,0.15)';
+      el.style.borderColor = 'rgba(60,180,60,0.3)';
+      el.style.color = '#90e090';
+      el.textContent = '重設密碼郵件已寄出，請查收信箱';
+      el.classList.add('show');
+    } catch(e) {
+      showError('寄送失敗，請確認電子郵件是否正確');
+    }
+  };
+</script>
+</body>
+</html>
