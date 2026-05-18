@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>電子訃聞</title>
+<meta name="theme-color" content="#1a2744">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;}
+body{font-family:'Noto Sans TC',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+
+/* ── THEMES ── */
+body.tw{background:linear-gradient(160deg,#dce8dc 0%,#c8d8c8 40%,#b8ccc0 100%);}
+body.tg{background:linear-gradient(160deg,#1e3c24 0%,#2a5030 50%,#1a3020 100%);}
+body.tp{background:linear-gradient(160deg,#f0d0d8 0%,#e0b8c4 40%,#c898a8 100%);}
+body.td{background:linear-gradient(160deg,#060e1c 0%,#0e1828 50%,#0a1420 100%);}
+body.to{background:linear-gradient(160deg,#c89048 0%,#a07030 50%,#785020 100%);}
+
+.wrap{width:100%;max-width:420px;min-height:100vh;display:flex;flex-direction:column;
+  animation:fu .6s ease both;}
+@keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO ── */
+.hero{width:100%;height:190px;position:relative;overflow:hidden;flex-shrink:0;}
+.tw .hero{background:linear-gradient(145deg,#c8d8c8,#a8c0a8,#88a888);}
+.tg .hero{background:linear-gradient(145deg,#2a5a30,#1e4424,#163820);}
+.tp .hero{background:linear-gradient(145deg,#e8a8b8,#d888a0,#c87090);}
+.td .hero{background:linear-gradient(145deg,#1e3060,#142244,#0e1828);}
+.to .hero{background:linear-gradient(145deg,#d4a96a,#b88040,#9a6828);}
+.hero-fl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:.16;font-size:80px;letter-spacing:20px;pointer-events:none;
+  animation:ffl 8s ease-in-out infinite;}
+@keyframes ffl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.hero-stars{position:absolute;top:14px;width:100%;text-align:center;font-size:10px;letter-spacing:12px;opacity:.4;}
+.tw .hero-stars,.tg .hero-stars,.td .hero-stars,.to .hero-stars{color:#fff;}
+.tp .hero-stars{color:rgba(80,20,40,.5);}
+.hero-body{position:absolute;bottom:0;left:0;right:0;padding:0 24px 18px;text-align:center;}
+.hero-title{font-family:'Noto Serif TC',serif;font-size:25px;font-weight:700;letter-spacing:5px;
+  text-shadow:0 2px 10px rgba(0,0,0,.2);margin-bottom:5px;}
+.hero-sub{font-size:12px;letter-spacing:3px;opacity:.75;}
+.tw .hero-title,.tg .hero-title,.td .hero-title,.to .hero-title{color:rgba(255,255,255,.95);}
+.tp .hero-title{color:rgba(80,20,40,.9);}
+.tw .hero-sub,.tg .hero-sub,.td .hero-sub,.to .hero-sub{color:rgba(255,255,255,.8);}
+.tp .hero-sub{color:rgba(80,20,40,.7);}
+
+/* ── PHOTO ── */
+.photo-wrap{display:flex;justify-content:center;margin-top:-50px;position:relative;z-index:10;margin-bottom:10px;}
+.photo-ring{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 30px rgba(0,0,0,.25);overflow:hidden;
+  animation:pi .5s .3s ease both;}
+@keyframes pi{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.tw .photo-ring{border:5px solid #fff;background:#c8d8c8;}
+.tg .photo-ring{border:5px solid #4a8a4e;background:#2a5030;}
+.tp .photo-ring{border:5px solid #fff;background:#f0c0d0;}
+.td .photo-ring{border:5px solid #b8965a;background:#1e3060;}
+.to .photo-ring{border:5px solid #ffe8a8;background:#d4a050;}
+.photo-ring img{width:100%;height:100%;object-fit:cover;}
+.ph-placeholder{font-size:38px;opacity:.45;display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
+
+/* ── BODY ── */
+.bd{flex:1;padding:4px 26px 0;}
+.dname{font-family:'Noto Serif TC',serif;font-size:21px;font-weight:700;letter-spacing:4px;text-align:center;margin-bottom:3px;}
+.ddates{font-size:12px;letter-spacing:2px;text-align:center;margin-bottom:14px;}
+.tw .dname{color:#1e3a22;} .tw .ddates{color:rgba(30,58,34,.6);}
+.tg .dname{color:rgba(255,255,255,.95);} .tg .ddates{color:rgba(255,255,255,.5);}
+.tp .dname{color:#5e1e34;} .tp .ddates{color:rgba(94,30,52,.6);}
+.td .dname{color:#d8e4f8;} .td .ddates{color:rgba(184,150,90,.8);}
+.to .dname{color:rgba(255,255,255,.95);} .to .ddates{color:rgba(255,240,180,.7);}
+
+/* ── MESSAGE ── */
+.msg{border-radius:10px;padding:13px 15px;margin-bottom:14px;font-size:13px;line-height:2;
+  text-align:center;font-family:'Noto Serif TC',serif;font-style:italic;letter-spacing:.5px;
+  animation:fi .5s .5s ease both;opacity:0;}
+@keyframes fi{to{opacity:1}}
+.tw .msg{background:rgba(255,255,255,.45);color:#2a4a2e;border:1px solid rgba(138,170,138,.3);}
+.tg .msg{background:rgba(255,255,255,.07);color:rgba(200,240,200,.85);border:1px solid rgba(255,255,255,.12);}
+.tp .msg{background:rgba(255,255,255,.4);color:#7a3448;border:1px solid rgba(216,120,144,.3);}
+.td .msg{background:rgba(184,150,90,.08);color:rgba(200,220,255,.8);border:1px solid rgba(184,150,90,.2);}
+.to .msg{background:rgba(255,255,255,.12);color:rgba(255,248,220,.9);border:1px solid rgba(255,220,120,.25);}
+
+.div{height:1px;margin:0 0 14px;opacity:.25;}
+.tw .div{background:#4a6a4e;} .tg .div{background:#aaccaa;} .tp .div{background:#d87890;} .td .div{background:#b8965a;} .to .div{background:rgba(255,220,140,.6);}
+
+.sec-t{font-size:12px;font-weight:600;letter-spacing:3px;text-align:center;margin-bottom:12px;}
+.tw .sec-t{color:#2a4a2e;} .tg .sec-t{color:rgba(180,240,180,.9);} .tp .sec-t{color:#6e2840;} .td .sec-t{color:#b8965a;} .to .sec-t{color:rgba(255,240,160,.9);}
+
+/* ── INFO ── */
+.ir{display:flex;align-items:flex-start;gap:11px;margin-bottom:10px;font-size:13px;line-height:1.7;}
+.ii{font-size:14px;flex-shrink:0;margin-top:1px;width:20px;text-align:center;}
+.tw .it{color:#3a5a3e;} .tg .it{color:rgba(200,240,200,.85);} .tp .it{color:#7a3448;} .td .it{color:rgba(190,210,245,.9);} .to .it{color:rgba(255,248,220,.9);}
+
+/* ── FAMILY ── */
+.fam-wrap{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:14px;}
+.fc{padding:5px 13px;border-radius:20px;font-size:12px;letter-spacing:1px;}
+.tw .fc{background:rgba(255,255,255,.55);color:#2a4a2e;border:1px solid rgba(100,150,100,.25);}
+.tg .fc{background:rgba(255,255,255,.08);color:rgba(200,255,200,.85);border:1px solid rgba(255,255,255,.15);}
+.tp .fc{background:rgba(255,255,255,.45);color:#7a3040;border:1px solid rgba(200,100,130,.2);}
+.td .fc{background:rgba(184,150,90,.1);color:rgba(200,220,255,.85);border:1px solid rgba(184,150,90,.25);}
+.to .fc{background:rgba(255,255,255,.1);color:rgba(255,248,210,.9);border:1px solid rgba(255,220,120,.25);}
+.fr{font-size:10px;opacity:.6;margin-right:2px;}
+
+/* ── NAV BTN ── */
+.nav-btn{display:flex;align-items:center;justify-content:center;gap:8px;
+  width:calc(100% - 52px);margin:14px 26px 0;padding:13px;border:none;border-radius:12px;
+  font-family:'Noto Serif TC',serif;font-size:14px;letter-spacing:2px;cursor:pointer;
+  text-decoration:none;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 18px rgba(0,0,0,.2);}
+.nav-btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(0,0,0,.25);}
+.tw .nav-btn{background:#2a4a2e;color:#fff;}
+.tg .nav-btn{background:rgba(180,255,180,.12);color:rgba(200,255,200,.95);border:1px solid rgba(200,255,200,.2);}
+.tp .nav-btn{background:#6e2840;color:#fff;}
+.td .nav-btn{background:#b8965a;color:#0e1828;font-weight:700;}
+.to .nav-btn{background:rgba(255,255,255,.15);color:rgba(255,248,210,.95);border:1px solid rgba(255,220,120,.3);}
+
+/* ── SHARE ── */
+.share-bar{display:flex;gap:8px;padding:10px 26px;}
+.sc{flex:1;padding:9px 7px;border-radius:10px;border:none;cursor:pointer;font-size:12px;
+  font-family:'Noto Sans TC',sans-serif;display:flex;align-items:center;justify-content:center;gap:4px;
+  transition:opacity .15s;letter-spacing:1px;}
+.sc:hover{opacity:.8;}
+.tw .sc,.tp .sc{background:rgba(255,255,255,.5);}
+.tw .sc{color:#2a4a2e;} .tp .sc{color:#6e2840;}
+.tg .sc{background:rgba(255,255,255,.08);color:rgba(200,255,200,.8);}
+.td .sc{background:rgba(184,150,90,.12);color:rgba(200,220,255,.8);}
+.to .sc{background:rgba(255,255,255,.1);color:rgba(255,248,210,.9);}
+
+.foot{padding:14px 26px 32px;text-align:center;}
+.foot-t{font-size:11px;letter-spacing:2px;opacity:.3;}
+.tw .foot-t,.tp .foot-t{color:#222;}
+.tg .foot-t,.td .foot-t,.to .foot-t{color:#fff;}
+
+/* ── STATES ── */
+.loading-screen,.error-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;padding:40px;text-align:center;gap:14px;}
+.loading-screen{color:rgba(255,255,255,.4);}
+.loading-screen p{font-family:'Noto Serif TC',serif;font-size:15px;letter-spacing:3px;}
+.loading-dot{width:8px;height:8px;border-radius:50%;background:rgba(184,150,90,.5);
+  animation:pulse 1.2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(.8);opacity:.5}50%{transform:scale(1.2);opacity:1}}
+.error-screen h2{font-family:'Noto Serif TC',serif;font-size:20px;letter-spacing:3px;color:rgba(255,255,255,.7);}
+.error-screen p{font-size:13px;color:rgba(255,255,255,.35);line-height:1.8;}
+</style>
+</head>
+<body class="td">
+
+<div class="loading-screen" id="ls">
+  <div class="loading-dot"></div>
+  <p>載入中</p>
+</div>
+<div class="wrap" id="wrap" style="display:none;"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const cfgScript = document.createElement('script');
+cfgScript.src = 'firebase-config.js';
+document.head.appendChild(cfgScript);
+await new Promise(r => cfgScript.onload = r);
+
+const app = initializeApp(FIREBASE_CONFIG);
+const db  = getFirestore(app);
+
+const id = new URLSearchParams(window.location.search).get('id');
+document.getElementById('ls').style.display = 'none';
+
+const wrap = document.getElementById('wrap');
+wrap.style.display = 'flex';
+
+if (!id) { renderErr('找不到訃聞','請確認連結是否正確'); }
+else {
+  const snap = await getDoc(doc(db,'cases',id));
+  if (!snap.exists()) { renderErr('此訃聞不存在',`案件 ID：${id}\n連結可能已失效`); }
+  else { render({ id, ...snap.data() }); }
+}
+
+function renderErr(title, msg) {
+  document.body.className = 'td';
+  wrap.innerHTML = `
+    <div class="error-screen">
+      <div style="font-size:46px;opacity:.4;">🕊️</div>
+      <h2>${title}</h2>
+      <p>${msg}</p>
+    </div>`;
+}
+
+function flowers(t) { return {white:'🌿🌸🌿',green:'🌿🌱🌿',pink:'🌸🌷🌸',dark:'✦⋆✦',gold:'❀✿❀'}[t]||'🌸'; }
+function stars(t)   { return {white:'— — —',green:'— — —',pink:'— — —',dark:'✦  ✦  ✦',gold:'✿  ✿  ✿'}[t]||'—'; }
+const tmap = {white:'tw',green:'tg',pink:'tp',dark:'td',gold:'to'};
+
+function render(c) {
+  const tc = tmap[c.theme||'white']||'td';
+  document.body.className = tc;
+  document.title = (c.name||'電子訃聞') + ' — ' + (c.title||'永遠的思念');
+
+  const ph = c.photo
+    ? `<img src="${c.photo}" alt="遺照">`
+    : `<div class="ph-placeholder">👤</div>`;
+
+  const msgHtml = c.message ? `<div class="msg">${c.message}</div>` : '';
+
+  const famHtml = (c.family?.length)
+    ? `<div class="div"></div>
+       <div class="sec-t">孝眷代表</div>
+       <div class="fam-wrap">
+         ${c.family.map(f=>`
+           <div class="fc">
+             ${f.relation?`<span class="fr">${f.relation}</span>`:''}
+             ${f.title||f.name}
+             ${f.title&&f.name?`<span style="opacity:.55;font-size:11px;"> ${f.name}</span>`:''}
+           </div>`).join('')}
+       </div>` : '';
+
+  const infoItems = [
+    c.ceremony?.date    && { icon:'📅', text:`日期：${c.ceremony.date}` },
+    c.ceremony?.time    && { icon:'🕙', text:`時間：${c.ceremony.time}` },
+    c.ceremony?.venue   && { icon:'🏛️', text:`地點：${c.ceremony.venue}` },
+    c.ceremony?.address && { icon:'📍', text:`地址：${c.ceremony.address}` },
+  ].filter(Boolean);
+
+  const infoHtml = infoItems.map(r=>`
+    <div class="ir"><span class="ii">${r.icon}</span><span class="it">${r.text}</span></div>`).join('');
+
+  const mapUrl = c.ceremony?.address
+    ? `https://maps.google.com/?q=${encodeURIComponent(c.ceremony.address)}` : null;
+
+  const su = encodeURIComponent(window.location.href);
+  const company = typeof COMPANY_NAME !== 'undefined' ? COMPANY_NAME : '數位追思服務';
+
+  wrap.innerHTML = `
+    <div class="hero">
+      <div class="hero-fl">${flowers(c.theme)}</div>
+      <div class="hero-stars">${stars(c.theme)}</div>
+      <div class="hero-body">
+        <div class="hero-title">${c.title||'永遠的思念'}</div>
+        <div class="hero-sub">${c.subtitle||''}</div>
+      </div>
+    </div>
+    <div class="photo-wrap"><div class="photo-ring">${ph}</div></div>
+    <div class="bd">
+      <div class="dname">${c.name||''}</div>
+      <div class="ddates">${c.dates||''}</div>
+      ${msgHtml}
+      <div class="div"></div>
+      ${famHtml}
+      <div class="sec-t">告別式資訊</div>
+      ${infoHtml}
+    </div>
+    ${mapUrl ? `<a class="nav-btn" href="${mapUrl}" target="_blank">📍 導航前往告別式現場</a>` : ''}
+    <div class="share-bar">
+      <button class="sc" onclick="window.open('https://social-plugins.line.me/lineit/share?url=${su}','_blank')">💬 LINE 分享</button>
+      <button class="sc" onclick="cpLink()">🔗 複製連結</button>
+    </div>
+    <div class="foot">
+      <div class="foot-t">${company} · 數位追思服務</div>
+    </div>
+  `;
+}
+
+window.cpLink = () => {
+  navigator.clipboard.writeText(window.location.href)
+    .then(()=>alert('連結已複製'))
+    .catch(()=>prompt('請複製此連結：', window.location.href));
+};
+</script>
+</body>
+</html>
