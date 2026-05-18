@@ -262,8 +262,8 @@ body::before {
     try {
       const snap = await getDoc(doc(db, 'users', uid));
       if (!snap.exists()) return false;
-      const role = snap.data().role;
-      return role === 'admin' || role === 'staff';
+      const role = (snap.data().role || '').toLowerCase().trim();
+      return role !== 'blocked' && role !== '';
     } catch { return false; }
   }
 
