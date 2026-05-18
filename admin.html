@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>後台管理 — 電子訃聞系統</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#1a2744; --navy2:#253660; --gold:#b8965a; --gold2:#d4b07a;
+  --cream:#f8f4ee; --white:#ffffff; --border:#e8e2d8;
+  --text:#2c2c2c; --muted:#928e88; --green:#3a7a48; --red:#b84040;
+  --shadow:0 4px 24px rgba(26,39,68,0.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+
+/* ── HEADER ── */
+.hd{background:var(--navy);height:62px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 2px 16px rgba(0,0,0,0.25);position:sticky;top:0;z-index:100;}
+.hd-brand{font-family:'Noto Serif TC',serif;color:var(--gold2);font-size:17px;letter-spacing:3px;
+  display:flex;align-items:center;gap:10px;}
+.hd-brand small{color:rgba(255,255,255,0.4);font-size:12px;font-family:'Noto Sans TC',sans-serif;letter-spacing:1px;}
+.hd-right{display:flex;align-items:center;gap:10px;}
+.user-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:5px 14px 5px 8px;}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--gold);
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--navy);font-weight:700;}
+.user-name{font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:1px;}
+.btn{padding:8px 18px;border-radius:8px;border:none;cursor:pointer;
+  font-family:'Noto Sans TC',sans-serif;font-size:13px;font-weight:500;transition:all .18s;letter-spacing:1px;}
+.btn-gold{background:var(--gold);color:var(--navy);}
+.btn-gold:hover{background:var(--gold2);}
+.btn-ghost{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.14);}
+.btn-ghost:hover{background:rgba(255,255,255,0.15);}
+
+/* ── STATS ── */
+.stats{background:var(--navy2);padding:10px 28px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;}
+.stat{color:rgba(255,255,255,0.6);font-size:12px;letter-spacing:1px;}
+.stat strong{color:var(--gold2);font-size:17px;font-family:'Noto Serif TC',serif;margin-right:4px;}
+
+/* ── LAYOUT ── */
+.layout{display:flex;min-height:calc(100vh - 102px);}
+
+/* ── SIDEBAR ── */
+.sb{width:268px;flex-shrink:0;background:var(--white);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;height:calc(100vh - 102px);position:sticky;top:102px;overflow-y:auto;}
+.sb-hd{padding:14px 18px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;}
+.sb-hd-label{font-size:11px;color:var(--muted);letter-spacing:2px;font-weight:600;}
+.sb-search{padding:10px 14px;border-bottom:1px solid var(--border);}
+.sb-search input{width:100%;padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;
+  font-size:13px;font-family:'Noto Sans TC',sans-serif;outline:none;transition:.2s;background:#fafaf8;}
+.sb-search input:focus{border-color:var(--gold);}
+.sb-list{flex:1;overflow-y:auto;}
+.ci{padding:13px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;position:relative;}
+.ci:hover{background:#f9f7f3;}
+.ci.active{background:#fdf8f0;border-left:3px solid var(--gold);}
+.ci-name{font-size:14px;font-weight:500;color:var(--navy);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ci-meta{font-size:11px;color:var(--muted);display:flex;gap:6px;align-items:center;}
+.ci-id{font-size:10px;color:#ccc;margin-top:2px;font-family:monospace;}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.dot-active{background:#4a9a5a;} .dot-draft{background:#d4a84a;}
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;letter-spacing:.5px;}
+.ba{background:#e8f5e9;color:#2e7d32;} .bd{background:#fff8e1;color:#f57f17;}
+.sb-empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px;}
+
+/* ── EDITOR ── */
+.ea{flex:1;padding:26px 30px;overflow-y:auto;}
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:420px;text-align:center;gap:14px;}
+.welcome .wi{font-size:52px;opacity:.25;}
+.welcome h2{font-family:'Noto Serif TC',serif;font-size:19px;color:var(--navy);opacity:.45;letter-spacing:3px;}
+
+/* ── TOP BAR ── */
+.etb{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;
+  padding-bottom:16px;border-bottom:1px solid var(--border);}
+.etb-name{font-family:'Noto Serif TC',serif;font-size:19px;color:var(--navy);letter-spacing:2px;}
+.etb-id{font-size:11px;color:var(--muted);font-family:monospace;background:var(--cream);
+  padding:2px 8px;border-radius:4px;margin-top:4px;display:inline-block;}
+.etb-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.btn-del{background:#fdf0f0;color:var(--red);border:1px solid #f0c0c0;}
+.btn-del:hover{background:#fce0e0;}
+.btn-pub{background:var(--green);color:#fff;}
+.btn-pub:hover{background:#2d6038;}
+.btn-ol{background:transparent;color:var(--navy);border:1.5px solid var(--navy);}
+.btn-ol:hover{background:var(--navy);color:#fff;}
+
+/* ── SECTIONS ── */
+.sec{background:var(--white);border-radius:12px;padding:18px 22px;margin-bottom:16px;box-shadow:var(--shadow);}
+.sec-title{font-size:12px;font-weight:700;color:var(--navy);letter-spacing:2px;
+  margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fg1{grid-template-columns:1fr;}
+.fg3{grid-template-columns:1fr 1fr 1fr;}
+.fl{display:flex;flex-direction:column;gap:5px;}
+.fl label{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;}
+.fl input,.fl textarea,.fl select{border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:13px;font-family:'Noto Sans TC',sans-serif;
+  color:var(--text);outline:none;transition:.2s;background:#fafaf8;}
+.fl input:focus,.fl textarea:focus{border-color:var(--gold);background:#fff;}
+.fl textarea{min-height:72px;resize:vertical;}
+
+/* ── THEME CHIPS ── */
+.tc-wrap{display:flex;gap:9px;flex-wrap:wrap;}
+.tc{padding:7px 15px;border-radius:20px;border:2px solid transparent;cursor:pointer;
+  font-size:12px;font-family:'Noto Sans TC',sans-serif;font-weight:500;transition:.18s;letter-spacing:1px;}
+.tc.tw{background:#f5f5f5;color:#444;border-color:#ddd;}
+.tc.tg{background:#e8f0e9;color:#2d5a32;border-color:#b3cfb5;}
+.tc.tp{background:#fce8e8;color:#7a3030;border-color:#f0b8b8;}
+.tc.td{background:#1a2744;color:#c8d4e8;border-color:#3a4f7a;}
+.tc.to{background:#f5ede0;color:#6b4c1e;border-color:#d4a96a;}
+.tc.sel{transform:scale(1.06);box-shadow:0 3px 12px rgba(0,0,0,.15);}
+.tc.tw.sel{border-color:#555;} .tc.tg.sel{border-color:#2d5a32;}
+.tc.tp.sel{border-color:#7a3030;} .tc.td.sel{border-color:#8090c0;} .tc.to.sel{border-color:#8a5c1e;}
+
+/* ── FAMILY TABLE ── */
+.ftable{width:100%;border-collapse:collapse;}
+.ftable th{font-size:11px;color:var(--muted);letter-spacing:1px;font-weight:600;
+  text-align:left;padding:7px 10px;border-bottom:1.5px solid var(--border);}
+.ftable td{padding:5px 7px;border-bottom:1px solid var(--border);}
+.ftable input{width:100%;border:1px solid transparent;border-radius:6px;padding:6px 8px;
+  font-size:13px;font-family:'Noto Sans TC',sans-serif;background:transparent;outline:none;transition:.15s;}
+.ftable input:focus{border-color:var(--gold);background:#fdfaf5;}
+.dbtn{background:none;border:none;cursor:pointer;color:#ccc;font-size:15px;transition:.15s;padding:4px 8px;}
+.dbtn:hover{color:var(--red);}
+.add-row{display:flex;gap:8px;margin-top:10px;}
+.add-row input{flex:1;border:1.5px solid var(--border);border-radius:8px;
+  padding:8px 11px;font-size:13px;font-family:'Noto Sans TC',sans-serif;outline:none;transition:.2s;}
+.add-row input:focus{border-color:var(--gold);}
+.btn-add{background:var(--cream);color:var(--navy);border:1.5px solid var(--border);padding:8px 13px;font-size:13px;}
+.btn-add:hover{border-color:var(--gold);}
+
+/* ── PHOTO ── */
+.pz{border:2px dashed var(--border);border-radius:10px;padding:18px;text-align:center;
+  cursor:pointer;transition:.2s;background:var(--cream);display:flex;flex-direction:column;align-items:center;gap:7px;}
+.pz:hover{border-color:var(--gold);background:#fdf8f0;}
+.pz.hp{border-style:solid;border-color:var(--gold);}
+.pz p{color:var(--muted);font-size:12px;}
+.pp{width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);}
+
+/* ── SHARE ── */
+.sp{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+  border-radius:12px;padding:18px 22px;color:#fff;}
+.sp-title{font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:2px;color:var(--gold2);margin-bottom:12px;}
+.su-box{display:flex;gap:8px;margin-bottom:12px;}
+.su-box input{flex:1;padding:9px 13px;border-radius:8px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.9);font-size:12px;font-family:monospace;outline:none;}
+.btn-copy{background:var(--gold);color:var(--navy);font-weight:700;}
+.sa{display:flex;gap:8px;}
+.sab{flex:1;padding:9px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.75);font-size:12px;
+  font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:.15s;letter-spacing:1px;}
+.sab:hover{background:rgba(255,255,255,.15);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--navy);color:#fff;padding:11px 22px;border-radius:10px;font-size:13px;
+  letter-spacing:1px;box-shadow:0 8px 28px rgba(0,0,0,.25);transition:transform .3s;z-index:999;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── MODAL ── */
+.mo{display:none;position:fixed;inset:0;background:rgba(26,39,68,.5);
+  backdrop-filter:blur(4px);z-index:500;align-items:center;justify-content:center;}
+.mo.open{display:flex;}
+.mbox{background:#fff;border-radius:16px;padding:30px;width:400px;box-shadow:0 24px 60px rgba(0,0,0,.25);}
+.mbox h3{font-family:'Noto Serif TC',serif;font-size:17px;color:var(--navy);letter-spacing:2px;margin-bottom:8px;}
+.mbox p{color:var(--muted);font-size:13px;line-height:1.8;margin-bottom:22px;}
+.ma{display:flex;gap:8px;justify-content:flex-end;}
+
+/* ── SAVING INDICATOR ── */
+.save-ind{position:fixed;top:72px;right:20px;background:rgba(26,39,68,.85);
+  color:rgba(255,255,255,.8);padding:6px 14px;border-radius:20px;font-size:11px;
+  letter-spacing:1px;opacity:0;transition:opacity .3s;z-index:200;}
+.save-ind.show{opacity:1;}
+
+@media(max-width:900px){
+  .sb{display:none;}
+  .ea{padding:16px;}
+  .fg3{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){.fg{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hd">
+  <div class="hd-brand">🕊️ 電子訃聞系統 <small>管理後台</small></div>
+  <div class="hd-right">
+    <div class="user-chip">
+      <div class="user-avatar" id="userAvatar">？</div>
+      <span class="user-name" id="userName">載入中</span>
+    </div>
+    <button class="btn btn-ghost" onclick="doLogout()">登出</button>
+    <button class="btn btn-gold" onclick="newCase()">＋ 新增案件</button>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><strong id="st0">0</strong>本月案件</div>
+  <div class="stat"><strong id="st1">0</strong>已發布</div>
+  <div class="stat"><strong id="st2">0</strong>草稿</div>
+  <div class="stat" id="st3"></div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+  <div class="sb">
+    <div class="sb-hd">
+      <span class="sb-hd-label">案件列表</span>
+      <button class="btn btn-gold" style="padding:5px 11px;font-size:12px;" onclick="newCase()">＋</button>
+    </div>
+    <div class="sb-search"><input id="srch" placeholder="搜尋姓名或 ID…" oninput="renderSb()"></div>
+    <div class="sb-list" id="sbList"></div>
+  </div>
+
+  <div class="ea" id="ea">
+    <div class="welcome" id="wlc">
+      <div class="wi">🕊️</div>
+      <h2>選擇或新增案件</h2>
+      <p style="font-size:13px;color:#aaa;letter-spacing:1px;">點擊左側列表，或按右上角「新增案件」</p>
+      <button class="btn btn-gold" style="margin-top:8px;" onclick="newCase()">＋ 建立第一個案件</button>
+    </div>
+    <div id="ef" style="display:none;"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="save-ind" id="saveInd">儲存中…</div>
+
+<!-- DELETE MODAL -->
+<div class="mo" id="delMo">
+  <div class="mbox">
+    <h3>確認刪除</h3>
+    <p>確定要刪除此案件嗎？<br>資料將從雲端永久移除，無法復原。</p>
+    <div class="ma">
+      <button class="btn" style="background:#f0f0f0;color:#444;" onclick="closeDel()">取消</button>
+      <button class="btn" style="background:var(--red);color:#fff;" onclick="confirmDel()">確認刪除</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="gpi" accept="image/*" style="display:none">
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp }       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, query, orderBy }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref as sRef, uploadString, getDownloadURL, deleteObject }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+// 等 config 載入
+const cfgScript = document.createElement('script');
+cfgScript.src = 'firebase-config.js';
+document.head.appendChild(cfgScript);
+await new Promise(r => cfgScript.onload = r);
+
+const app     = initializeApp(FIREBASE_CONFIG);
+const auth    = getAuth(app);
+const db      = getFirestore(app);
+const storage = getStorage(app);
+
+// ─── 驗證 ───
+onAuthStateChanged(auth, async user => {
+  if (!user) { window.location.href = 'index.html'; return; }
+  // 顯示使用者
+  const initials = (user.displayName || user.email || '?').charAt(0).toUpperCase();
+  document.getElementById('userAvatar').textContent = initials;
+  document.getElementById('userName').textContent = user.displayName || user.email.split('@')[0];
+  initApp();
+});
+
+window.doLogout = async () => { await signOut(auth); window.location.href = 'index.html'; };
+
+// ─── STATE ───
+let cases = [];
+let curId = null;
+let delPending = null;
+let saveTimer = null;
+
+// ─── INIT ───
+function initApp() {
+  const q = query(collection(db, 'cases'), orderBy('createdAt', 'desc'));
+  onSnapshot(q, snap => {
+    cases = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderSb();
+    updateStats();
+    if (curId) {
+      const c = byId(curId);
+      if (c) refreshSbSelection();
+    }
+  });
+}
+
+function byId(id) { return cases.find(c => c.id === id); }
+
+function genId() {
+  return 'OB-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2,4).toUpperCase();
+}
+
+function shareUrl(id) {
+  return (typeof OBITUARY_BASE_URL !== 'undefined' ? OBITUARY_BASE_URL : 'obituary.html') + '?id=' + id;
+}
+
+// ─── NEW CASE ───
+window.newCase = async function() {
+  const id = genId();
+  const data = {
+    status: 'draft', theme: 'white',
+    name: '', dates: '', title: '永遠的思念', subtitle: '心中永遠的摯愛',
+    message: '', photo: null,
+    ceremony: { date: '', time: '', venue: '', address: '' },
+    family: [],
+    createdAt: serverTimestamp(), updatedAt: serverTimestamp()
+  };
+  await setDoc(doc(db, 'cases', id), data);
+  selectCase(id);
+  toast('✓ 已建立新案件');
+};
+
+// ─── SELECT ───
+window.selectCase = function(id) {
+  curId = id;
+  const c = byId(id);
+  if (!c) return;
+  document.getElementById('wlc').style.display = 'none';
+  document.getElementById('ef').style.display = 'block';
+  renderForm(c);
+  refreshSbSelection();
+};
+
+function refreshSbSelection() {
+  document.querySelectorAll('.ci').forEach(el => {
+    el.classList.toggle('active', el.dataset.id === curId);
+  });
+}
+
+// ─── SIDEBAR ───
+window.renderSb = function() {
+  const q = (document.getElementById('srch')?.value || '').toLowerCase();
+  const filtered = cases.filter(c => !q || (c.name||'').toLowerCase().includes(q) || c.id.toLowerCase().includes(q));
+  const el = document.getElementById('sbList');
+  if (!filtered.length) { el.innerHTML = '<div class="sb-empty">尚無案件</div>'; return; }
+  el.innerHTML = filtered.map(c => `
+    <div class="ci ${c.id===curId?'active':''}" data-id="${c.id}" onclick="selectCase('${c.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div class="ci-name">${c.name||'（未命名）'}</div>
+        <span class="badge ${c.status==='active'?'ba':'bd'}">${c.status==='active'?'已發布':'草稿'}</span>
+      </div>
+      <div class="ci-meta">
+        <span class="dot dot-${c.status==='active'?'active':'draft'}"></span>
+        <span>${c.ceremony?.date||'未設日期'}</span>
+      </div>
+      <div class="ci-id">${c.id}</div>
+    </div>
+  `).join('');
+};
+
+function updateStats() {
+  const now = new Date();
+  const mn = ['一','二','三','四','五','六','七','八','九','十','十一','十二'];
+  const thisMonth = cases.filter(c => {
+    if (!c.createdAt?.toDate) return false;
+    const d = c.createdAt.toDate();
+    return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+  });
+  document.getElementById('st0').textContent = thisMonth.length;
+  document.getElementById('st1').textContent = cases.filter(c=>c.status==='active').length;
+  document.getElementById('st2').textContent = cases.filter(c=>c.status!=='active').length;
+  document.getElementById('st3').innerHTML = `<span style="color:rgba(255,255,255,.35);font-size:11px;">${now.getFullYear()} 年 ${mn[now.getMonth()]} 月</span>`;
+}
+
+// ─── FORM ───
+function renderForm(c) {
+  const fRows = (c.family||[]).map((f,i)=>`
+    <tr>
+      <td><input value="${esc(f.relation)}" oninput="updFam(${i},'relation',this.value)" placeholder="長子"></td>
+      <td><input value="${esc(f.name)}" oninput="updFam(${i},'name',this.value)" placeholder="陳大明"></td>
+      <td><input value="${esc(f.title)}" oninput="updFam(${i},'title',this.value)" placeholder="孝男"></td>
+      <td><button class="dbtn" onclick="rmFam(${i})">✕</button></td>
+    </tr>`).join('');
+
+  const photoHtml = c.photo
+    ? `<img src="${c.photo}" class="pp" id="ppImg"><br><span style="font-size:11px;color:var(--muted);">點擊更換</span>`
+    : `<div style="font-size:26px;opacity:.4;">📷</div><p>點擊上傳遺照</p>`;
+
+  const url = shareUrl(c.id);
+
+  document.getElementById('ef').innerHTML = `
+    <div class="etb">
+      <div>
+        <div class="etb-name">${esc(c.name)||'新案件'}</div>
+        <div class="etb-id">ID: ${c.id}</div>
+      </div>
+      <div class="etb-actions">
+        <button class="btn btn-del" onclick="openDel('${c.id}')">🗑 刪除</button>
+        <button class="btn btn-ol" onclick="prevCase('${c.id}')">👁 預覽</button>
+        <button class="btn btn-pub" id="pubBtn" onclick="togglePub('${c.id}')">
+          ${c.status==='active'?'✓ 已發布・點擊取消':'🚀 發布案件'}
+        </button>
+      </div>
+    </div>
+
+    <!-- 基本 -->
+    <div class="sec">
+      <div class="sec-title">👤 往生者基本資訊</div>
+      <div class="fg">
+        <div class="fl"><label>往生者姓名 *</label>
+          <input id="fn" value="${esc(c.name)}" oninput="as('name',this.value)" placeholder="陳○○ 老先生"></div>
+        <div class="fl"><label>生卒年月日</label>
+          <input id="fd" value="${esc(c.dates)}" oninput="as('dates',this.value)" placeholder="1940.01.01 – 2024.05.20"></div>
+        <div class="fl"><label>訃聞主標題</label>
+          <input id="ft" value="${esc(c.title)}" oninput="as('title',this.value)" placeholder="永遠的思念"></div>
+        <div class="fl"><label>副標題</label>
+          <input id="fs" value="${esc(c.subtitle)}" oninput="as('subtitle',this.value)" placeholder="心中永遠的摯愛"></div>
+        <div class="fl" style="grid-column:1/-1;"><label>悼念語句</label>
+          <textarea id="fm" oninput="as('message',this.value)" placeholder="感謝您一生的付出與愛護…">${esc(c.message)}</textarea></div>
+      </div>
+    </div>
+
+    <!-- 遺照 -->
+    <div class="sec">
+      <div class="sec-title">📷 遺照上傳</div>
+      <div class="pz ${c.photo?'hp':''}" id="pzone" onclick="trigPh()">
+        ${photoHtml}
+      </div>
+    </div>
+
+    <!-- 告別式 -->
+    <div class="sec">
+      <div class="sec-title">📅 告別式資訊</div>
+      <div class="fg">
+        <div class="fl"><label>日期</label>
+          <input value="${esc(c.ceremony?.date)}" oninput="asCer('date',this.value)" placeholder="2024年05月25日（六）"></div>
+        <div class="fl"><label>時間</label>
+          <input value="${esc(c.ceremony?.time)}" oninput="asCer('time',this.value)" placeholder="上午 10:00"></div>
+        <div class="fl"><label>地點名稱</label>
+          <input value="${esc(c.ceremony?.venue)}" oninput="asCer('venue',this.value)" placeholder="○○殯儀館 追思廳"></div>
+        <div class="fl"><label>完整地址</label>
+          <input value="${esc(c.ceremony?.address)}" oninput="asCer('address',this.value)" placeholder="台北市○○區○○路○○號"></div>
+      </div>
+    </div>
+
+    <!-- 家屬 -->
+    <div class="sec">
+      <div class="sec-title">👨‍👩‍👧‍👦 家屬名單</div>
+      <table class="ftable">
+        <thead><tr><th>關係</th><th>姓名</th><th>稱謂顯示</th><th></th></tr></thead>
+        <tbody id="ftb">${fRows}</tbody>
+      </table>
+      <div class="add-row">
+        <input id="nr" placeholder="關係（長子…）">
+        <input id="nn" placeholder="姓名">
+        <input id="nt" placeholder="稱謂（孝男…）">
+        <button class="btn btn-add" onclick="addFam()">＋ 新增</button>
+      </div>
+    </div>
+
+    <!-- 款式 -->
+    <div class="sec">
+      <div class="sec-title">🎨 訃聞款式</div>
+      <div class="tc-wrap">
+        ${[['white','tw','🕊️ 白色清雅'],['green','tg','🌿 綠意自然'],['pink','tp','🌸 粉色溫柔'],['dark','td','🌙 深藍莊重'],['gold','to','✨ 金色典雅']].map(([v,cls,lbl])=>`
+          <div class="tc ${cls} ${c.theme===v?'sel':''}" onclick="selTheme('${v}')">${lbl}</div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- 分享 -->
+    <div class="sp">
+      <div class="sp-title">🔗 分享連結</div>
+      <div class="su-box">
+        <input type="text" value="${url}" readonly id="suInput">
+        <button class="btn btn-copy" onclick="cpUrl()">複製</button>
+      </div>
+      <div class="sa">
+        <button class="sab" onclick="prevCase('${c.id}')">👁 開啟預覽</button>
+        <button class="sab" onclick="lineShare('${c.id}')">💬 LINE 分享</button>
+        <button class="sab" onclick="showQR('${c.id}')">📱 QR Code</button>
+      </div>
+    </div>
+    <div style="height:40px;"></div>
+  `;
+
+  // Photo handler
+  document.getElementById('gpi').onchange = async function(e) {
+    const file = e.target.files[0]; if (!file) return;
+    toast('上傳中…');
+    const reader = new FileReader();
+    reader.onload = async ev => {
+      try {
+        // Upload to Firebase Storage
+        const storageRef = sRef(storage, `photos/${curId}`);
+        await uploadString(storageRef, ev.target.result, 'data_url');
+        const url = await getDownloadURL(storageRef);
+        await updateDoc(doc(db, 'cases', curId), { photo: url, updatedAt: serverTimestamp() });
+        const zone = document.getElementById('pzone');
+        if (zone) {
+          zone.classList.add('hp');
+          zone.innerHTML = `<img src="${url}" class="pp"><br><span style="font-size:11px;color:var(--muted);">點擊更換</span>`;
+        }
+        toast('✓ 遺照已上傳');
+      } catch(err) { toast('上傳失敗：' + err.message); }
+    };
+    reader.readAsDataURL(file);
+    this.value = '';
+  };
+}
+
+window.trigPh = () => document.getElementById('gpi').click();
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ─── AUTO SAVE ───
+window.as = function(field, value) {
+  const c = byId(curId); if (!c) return;
+  c[field] = value;
+  if (field==='name') document.querySelector('.etb-name').textContent = value||'新案件';
+  scheduleSave({ [field]: value });
+};
+
+window.asCer = function(field, value) {
+  const c = byId(curId); if (!c) return;
+  if (!c.ceremony) c.ceremony = {};
+  c.ceremony[field] = value;
+  scheduleSave({ [`ceremony.${field}`]: value });
+};
+
+function scheduleSave(fields) {
+  const ind = document.getElementById('saveInd');
+  ind.textContent = '儲存中…'; ind.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    try {
+      await updateDoc(doc(db, 'cases', curId), { ...fields, updatedAt: serverTimestamp() });
+      renderSb();
+      ind.textContent = '✓ 已儲存'; setTimeout(()=>ind.classList.remove('show'), 1500);
+    } catch(e) { ind.textContent = '儲存失敗'; setTimeout(()=>ind.classList.remove('show'), 2000); }
+  }, 700);
+}
+
+// ─── FAMILY ───
+window.addFam = async function() {
+  const c = byId(curId); if (!c) return;
+  const r = document.getElementById('nr').value.trim();
+  const n = document.getElementById('nn').value.trim();
+  const t = document.getElementById('nt').value.trim();
+  if (!n) { toast('請輸入家屬姓名'); return; }
+  c.family = [...(c.family||[]), { relation:r, name:n, title:t }];
+  await updateDoc(doc(db,'cases',curId), { family: c.family, updatedAt: serverTimestamp() });
+  ['nr','nn','nt'].forEach(id=>document.getElementById(id).value='');
+  refreshFamTable(c); toast('✓ 已新增家屬');
+};
+
+window.updFam = function(i, field, value) {
+  const c = byId(curId); if (!c||!c.family[i]) return;
+  c.family[i][field] = value;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>updateDoc(doc(db,'cases',curId),{family:c.family,updatedAt:serverTimestamp()}), 800);
+};
+
+window.rmFam = async function(i) {
+  const c = byId(curId); if (!c) return;
+  c.family.splice(i,1);
+  await updateDoc(doc(db,'cases',curId),{family:c.family,updatedAt:serverTimestamp()});
+  refreshFamTable(c); toast('已移除');
+};
+
+function refreshFamTable(c) {
+  const tb = document.getElementById('ftb'); if (!tb) return;
+  tb.innerHTML = (c.family||[]).map((f,i)=>`
+    <tr>
+      <td><input value="${esc(f.relation)}" oninput="updFam(${i},'relation',this.value)" placeholder="長子"></td>
+      <td><input value="${esc(f.name)}" oninput="updFam(${i},'name',this.value)" placeholder="陳大明"></td>
+      <td><input value="${esc(f.title)}" oninput="updFam(${i},'title',this.value)" placeholder="孝男"></td>
+      <td><button class="dbtn" onclick="rmFam(${i})">✕</button></td>
+    </tr>`).join('');
+}
+
+// ─── THEME ───
+window.selTheme = async function(theme) {
+  const c = byId(curId); if (!c) return;
+  c.theme = theme;
+  await updateDoc(doc(db,'cases',curId),{theme,updatedAt:serverTimestamp()});
+  document.querySelectorAll('.tc').forEach(el=>el.classList.remove('sel'));
+  const map = {white:'tw',green:'tg',pink:'tp',dark:'td',gold:'to'};
+  document.querySelector('.tc.'+map[theme])?.classList.add('sel');
+  toast('款式已套用');
+};
+
+// ─── PUBLISH ───
+window.togglePub = async function(id) {
+  const c = byId(id); if (!c) return;
+  if (c.status!=='active' && !c.name) { toast('請先填寫往生者姓名'); return; }
+  const newStatus = c.status==='active' ? 'draft' : 'active';
+  await updateDoc(doc(db,'cases',id),{status:newStatus,updatedAt:serverTimestamp()});
+  toast(newStatus==='active' ? '✓ 已發布！連結已啟用' : '已改為草稿');
+  const btn = document.getElementById('pubBtn');
+  if (btn) btn.textContent = newStatus==='active' ? '✓ 已發布・點擊取消' : '🚀 發布案件';
+};
+
+// ─── DELETE ───
+window.openDel  = id => { delPending=id; document.getElementById('delMo').classList.add('open'); };
+window.closeDel = ()  => { delPending=null; document.getElementById('delMo').classList.remove('open'); };
+window.confirmDel = async function() {
+  if (!delPending) return;
+  try {
+    // 嘗試刪除遺照
+    try { await deleteObject(sRef(storage, `photos/${delPending}`)); } catch {}
+    await deleteDoc(doc(db,'cases',delPending));
+    closeDel();
+    curId = null;
+    document.getElementById('ef').style.display = 'none';
+    document.getElementById('wlc').style.display = 'flex';
+    toast('已刪除案件');
+  } catch(e) { toast('刪除失敗：' + e.message); closeDel(); }
+};
+
+// ─── SHARE ───
+window.prevCase  = id => window.open(shareUrl(id), '_blank');
+window.lineShare = id => window.open('https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(window.location.origin+'/'+shareUrl(id)),'_blank');
+window.showQR    = id => window.open('https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='+encodeURIComponent(window.location.origin+'/'+shareUrl(id)),'_blank');
+window.cpUrl     = () => {
+  const inp = document.getElementById('suInput');
+  navigator.clipboard.writeText(inp.value).then(()=>toast('✓ 連結已複製')).catch(()=>{inp.select();document.execCommand('copy');toast('✓ 連結已複製');});
+};
+
+// ─── TOAST ───
+let toastT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(()=>el.classList.remove('show'),2200);
+}
+window.toast = toast;
+</script>
+</body>
+</html>
