@@ -79,54 +79,48 @@ body.t-autumn       { background: linear-gradient(160deg,#f5ede0,#e8d8c0,#d8c0a0
 /* ── Photo ring ── */
 .photo-wrap {
   display: flex; justify-content: center;
-  margin-top: -110px; z-index: 10; position: relative; margin-bottom: 0;
+  margin-top: -68px; z-index: 10; position: relative; margin-bottom: 14px;
 }
 .photo-ring {
-  width: 180px; height: 230px;
-  border-radius: 0;
+  width: 136px; height: 136px;
+  border-radius: 50%;
   overflow: hidden;
   position: relative;
-  border: none; box-shadow: none; background: transparent;
-  display: flex; align-items: flex-end; justify-content: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.28);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
 }
-/* Top fade - blends into hero image */
-.photo-ring::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 60px;
-  z-index: 2; pointer-events: none;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.15), transparent);
-}
-/* Bottom fade - blends into body bg */
-.photo-ring::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
-  z-index: 2; pointer-events: none;
-}
-.t-white        .photo-ring::after { background: linear-gradient(to bottom, transparent, #dce8dc); }
-.t-sakura       .photo-ring::after { background: linear-gradient(to bottom, transparent, #f0d0d8); }
-.t-rose         .photo-ring::after { background: linear-gradient(to bottom, transparent, #ead0c0); }
-.t-buddha_gold  .photo-ring::after { background: linear-gradient(to bottom, transparent, #e8d898); }
-.t-buddha_pink  .photo-ring::after { background: linear-gradient(to bottom, transparent, #f4d0d8); }
-.t-indigo       .photo-ring::after { background: linear-gradient(to bottom, transparent, #1e2838); }
-.t-cross_blue   .photo-ring::after { background: linear-gradient(to bottom, transparent, #c8dff2); }
-.t-cross_violet .photo-ring::after { background: linear-gradient(to bottom, transparent, #d8d0f0); }
-.t-ocean        .photo-ring::after { background: linear-gradient(to bottom, transparent, #c8ddf0); }
-.t-lavender     .photo-ring::after { background: linear-gradient(to bottom, transparent, #e0d8f0); }
-.t-night        .photo-ring::after { background: linear-gradient(to bottom, transparent, #060c18); }
-.t-ink          .photo-ring::after { background: linear-gradient(to bottom, transparent, #d8d8d0); }
-.t-pine         .photo-ring::after { background: linear-gradient(to bottom, transparent, #d0dac8); }
-.t-autumn       .photo-ring::after { background: linear-gradient(to bottom, transparent, #e8d8c0); }
-
-/* Left and right side fades */
-.photo-ring .photo-side-fade {
-  position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2; pointer-events: none;
-}
+.t-white        .photo-ring { border: 5px solid white;    background: #e8e4dc; }
+.t-sakura       .photo-ring { border: 5px solid white;    background: #f4c8d4; }
+.t-rose         .photo-ring { border: 5px solid #e8c8b8;  background: #d4a898; }
+.t-buddha_gold  .photo-ring { border: 5px solid #f0d878;  background: #d4a840; }
+.t-buddha_pink  .photo-ring { border: 5px solid white;    background: #f0b8c8; }
+.t-indigo       .photo-ring { border: 5px solid #8899cc;  background: #1a2840; }
+.t-cross_blue   .photo-ring { border: 5px solid white;    background: #90c0e0; }
+.t-cross_violet .photo-ring { border: 5px solid white;    background: #b898d8; }
+.t-ocean        .photo-ring { border: 5px solid white;    background: #70a8d0; }
+.t-lavender     .photo-ring { border: 5px solid white;    background: #b898d0; }
+.t-night        .photo-ring { border: 5px solid #c8b870;  background: #101828; }
+.t-ink          .photo-ring { border: 5px solid #a8a89c;  background: #d8d4cc; }
+.t-pine         .photo-ring { border: 5px solid #a0b898;  background: #788870; }
+.t-autumn       .photo-ring { border: 5px solid #d8a870;  background: #a87840; }
 .photo-ring img {
   width: 100%; height: 100%;
-  object-fit: cover; object-position: center top;
+  object-fit: cover;
+  object-position: center 20%;
   display: block;
+  transition: object-position 0.2s;
 }
-.ph { font-size: 48px; opacity: 0.4; margin-bottom: 40px; }
+/* position hint tooltip */
+.photo-pos-hint {
+  position: absolute; bottom: 6px; right: 6px;
+  background: rgba(0,0,0,0.45); color: white;
+  font-size: 9px; padding: 2px 5px; border-radius: 8px;
+  letter-spacing: 0.5px; pointer-events: none; opacity: 0;
+  transition: opacity 0.3s;
+}
+.photo-ring:hover .photo-pos-hint { opacity: 1; }
+.ph { font-size: 44px; opacity: 0.5; }
 
 /* ── Text content ── */
 .body { flex: 1; padding: 0 24px; }
@@ -377,7 +371,8 @@ function render(c) {
   if (ogImg) setMeta('og:image', ogImg);
   setMeta('description', ogDesc, true);
 
-  const ph  = c.photo ? '<img src="'+c.photo+'" alt="遺照"><div class="photo-side-fade" style="left:0;background:linear-gradient(to right,var(--body-bg,rgba(240,240,240,1)),transparent)"></div><div class="photo-side-fade" style="right:0;background:linear-gradient(to left,var(--body-bg,rgba(240,240,240,1)),transparent)"></div>' : '<div class="ph">👤</div>';
+  const photoPos = c.photo_pos || 'center 20%';
+  const ph  = c.photo ? '<img src="'+c.photo+'" alt="遺照" id="photoImg" style="object-position:'+photoPos+'"><div class="photo-pos-hint">點擊調整位置</div>' : '<div class="ph">👤</div>';
   const msg = c.message ? '<div class="msg">'+c.message+'</div>' : '';
 
   let famHtml = '';
@@ -427,6 +422,27 @@ function render(c) {
     '</div>'+
     '<div class="foot">'+co+' · 數位追思服務</div>';
 }
+
+// ── Photo position control ──────────────────────────────────────────────────
+// Click cycles through preset positions: face top → center → lower
+const POSITIONS = ['center 15%','center 30%','center 50%','center 65%','center 80%'];
+document.addEventListener('click', async function(e) {
+  const img = e.target.closest('#photoImg');
+  if (!img) return;
+  const cur = img.style.objectPosition || 'center 20%';
+  const idx = POSITIONS.findIndex(p => cur.includes(p.split(' ')[1]));
+  const next = POSITIONS[(idx + 1) % POSITIONS.length];
+  img.style.objectPosition = next;
+  // Save to Firestore
+  const cid = new URLSearchParams(location.search).get('id');
+  if (cid) {
+    try {
+      const { getFirestore, doc, updateDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+      const db2 = getFirestore();
+      await updateDoc(doc(db2,'cases',cid), { photo_pos: next });
+    } catch(e) {}
+  }
+});
 </script>
 </body>
 </html>
