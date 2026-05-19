@@ -277,7 +277,31 @@ function showErr(title, msg) {
 function render(c) {
   const tc = THEMES[c.theme] || 't-night';
   document.body.className = tc;
-  document.title = (c.name||'電子訃聞') + ' — ' + (c.title||'永遠的思念');
+
+  // 動態設定頁面標題與 OG 標籤（LINE / Facebook 預覽用）
+  const name  = c.name  || '電子訃聞';
+  const title = c.title || '永遠的思念';
+  const ogTitle = '追思 ' + name + ' 的電子訃聞';
+  const ogDesc  = c.message || (title + ' · ' + (c.dates || ''));
+  const ogImg   = c.photo || '';
+
+  document.title = ogTitle;
+
+  function setMeta(prop, val, isName) {
+    let el = document.querySelector((isName ? 'meta[name="' : 'meta[property="') + prop + '"]');
+    if (!el) {
+      el = document.createElement('meta');
+      el.setAttribute(isName ? 'name' : 'property', prop);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', val);
+  }
+  setMeta('og:title',       ogTitle);
+  setMeta('og:description', ogDesc);
+  setMeta('og:type',        'website');
+  setMeta('og:url',         location.href);
+  if (ogImg) setMeta('og:image', ogImg);
+  setMeta('description', ogDesc, true);
 
   const ph  = c.photo ? '<img src="'+c.photo+'" alt="遺照">' : '<div class="ph">👤</div>';
   const msg = c.message ? '<div class="msg">'+c.message+'</div>' : '';
