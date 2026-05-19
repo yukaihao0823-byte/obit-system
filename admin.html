@@ -301,7 +301,7 @@ window.newCase = async function() {
     status:'draft', theme:'white',
     name:'', dates:'', title:'永遠的思念', subtitle:'心中永遠的摯愛',
     message:'', photo:null,
-    ceremony:{ date:'', time:'', venue:'', address:'' },
+    ceremony:{ date:'', time:'', venue:'', address:'', altar:'' }, flower_form:'',
     family:[], createdAt:serverTimestamp(), updatedAt:serverTimestamp()
   });
   selectCase(id); toast('✓ 已建立新案件');
@@ -415,6 +415,16 @@ function renderForm(c) {
           <input value="${esc(c.ceremony?.venue)}" oninput="asCer('venue',this.value)" placeholder="○○殯儀館 追思廳"></div>
         <div class="fl"><label>完整地址</label>
           <input value="${esc(c.ceremony?.address)}" oninput="asCer('address',this.value)" placeholder="台北市○○區○○路○○號"></div>
+        <div class="fl" style="grid-column:1/-1;"><label>設靈處（選填）</label>
+          <input value="${esc(c.ceremony?.altar)}" oninput="asCer('altar',this.value)" placeholder="例：台北市○○區○○路○○號 家中"></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">🌸 訂購花禮連結（選填）</div>
+      <div class="fl">
+        <label>Google 表單網址（每個案件可各別設定）</label>
+        <input value="${esc(c.flower_form)}" oninput="as('flower_form',this.value)" placeholder="https://forms.gle/xxxxxxxx">
       </div>
     </div>
 

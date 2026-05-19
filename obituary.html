@@ -364,6 +364,7 @@ function render(c) {
     if (c.ceremony.time)    infoHtml += '<div class="ir"><span class="ii">🕙</span><span class="it">時間：'+c.ceremony.time+'</span></div>';
     if (c.ceremony.venue)   infoHtml += '<div class="ir"><span class="ii">🏛️</span><span class="it">地點：'+c.ceremony.venue+'</span></div>';
     if (c.ceremony.address) infoHtml += '<div class="ir"><span class="ii">📍</span><span class="it">地址：'+c.ceremony.address+'</span></div>';
+    if (c.ceremony.altar)   infoHtml += '<div class="ir"><span class="ii">🕯️</span><span class="it">設靈處：'+c.ceremony.altar+'</span></div>';
   }
 
   const mapBtn = (c.ceremony && c.ceremony.address)
@@ -387,7 +388,7 @@ function render(c) {
       infoHtml+
     '</div>'+
     mapBtn+
-    '<a class="nav-btn flower-btn" href="https://forms.gle/FtQGhNejMLHpqJSi7" target="_blank">🌸 訂購花禮</a>'+
+    (c.flower_form ? '<a class="nav-btn flower-btn" href="'+c.flower_form+'" target="_blank">🌸 訂購花禮</a>' : '')+
     '<div class="share-bar">'+
       '<button class="sc" onclick="window.open(\'https://lin.ee/94Hcj4Pv\',\'_blank\')">💬 聯繫禮儀師</button>'+
       '<button class="sc" onclick="navigator.clipboard.writeText(location.href).then(function(){alert(\'連結已複製\')})">🔗 複製連結</button>'+
