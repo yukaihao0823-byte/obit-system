@@ -9,4 +9,4 @@ const FIREBASE_CONFIG = {
 
 const COMPANY_NAME = "醬醬興有限公司";
 
-const OBITUARY_BASE_URL = "https://lucky-axolotl-3aff3d.netlify.app/obituary.html";
+const OBITUARY_BASE_URL = "https://yukaihao0823-byte.github.io/obit-system/obituary.html";
