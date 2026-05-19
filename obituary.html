@@ -50,11 +50,14 @@ body.t-autumn       { background: linear-gradient(160deg,#f5ede0,#e8d8c0,#d8c0a0
 /* Gradient overlay — ensures title text always readable */
 .hero::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.40) 0%, rgba(0,0,0,0.05) 55%, transparent 100%);
+  background: linear-gradient(to top, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.08) 50%, transparent 100%);
 }
 .hero-body {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 0 24px 20px; text-align: center; z-index: 1;
+  position: absolute; bottom: 0; left: 0; right: 0; top: 0;
+  padding: 0 24px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; z-index: 1;
 }
 .hero-title {
   font-family: 'Noto Serif TC', serif; font-size: 24px; font-weight: 700;
