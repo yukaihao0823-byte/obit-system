@@ -77,24 +77,47 @@ body.t-autumn       { background: linear-gradient(160deg,#f5ede0,#e8d8c0,#d8c0a0
 }
 
 /* ── Photo ring ── */
-.photo-wrap { display: flex; justify-content: center; margin-top: -48px; z-index: 10; position: relative; margin-bottom: 12px; }
-.photo-ring { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; }
-.t-white        .photo-ring { border: 5px solid white;    background: #e8e4dc; }
-.t-sakura       .photo-ring { border: 5px solid white;    background: #f4c8d4; }
-.t-rose         .photo-ring { border: 5px solid #e8c8b8;  background: #d4a898; }
-.t-buddha_gold  .photo-ring { border: 5px solid #f0d878;  background: #d4a840; }
-.t-buddha_pink  .photo-ring { border: 5px solid white;    background: #f0b8c8; }
-.t-indigo       .photo-ring { border: 5px solid #8899cc;  background: #1a2840; }
-.t-cross_blue   .photo-ring { border: 5px solid white;    background: #90c0e0; }
-.t-cross_violet .photo-ring { border: 5px solid white;    background: #b898d8; }
-.t-ocean        .photo-ring { border: 5px solid white;    background: #70a8d0; }
-.t-lavender     .photo-ring { border: 5px solid white;    background: #b898d0; }
-.t-night        .photo-ring { border: 5px solid #c8b870;  background: #101828; }
-.t-ink          .photo-ring { border: 5px solid #a8a89c;  background: #d8d4cc; }
-.t-pine         .photo-ring { border: 5px solid #a0b898;  background: #788870; }
-.t-autumn       .photo-ring { border: 5px solid #d8a870;  background: #a87840; }
-.photo-ring img { width: 100%; height: 100%; object-fit: cover; }
-.ph { font-size: 36px; opacity: 0.5; }
+.photo-wrap {
+  display: flex; justify-content: center;
+  margin-top: -80px; z-index: 10; position: relative; margin-bottom: 8px;
+}
+.photo-ring {
+  width: 160px; height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+  display: flex; align-items: flex-end; justify-content: center;
+  background: transparent;
+}
+/* Fade out bottom edge naturally into page background */
+.photo-ring::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 56px;
+  z-index: 2; pointer-events: none;
+}
+/* Each theme fades into its own body bg color */
+.t-white        .photo-ring::after { background: linear-gradient(to bottom, transparent, #e0ddd6); }
+.t-sakura       .photo-ring::after { background: linear-gradient(to bottom, transparent, #f0d0d8); }
+.t-rose         .photo-ring::after { background: linear-gradient(to bottom, transparent, #ead0c0); }
+.t-buddha_gold  .photo-ring::after { background: linear-gradient(to bottom, transparent, #e8d898); }
+.t-buddha_pink  .photo-ring::after { background: linear-gradient(to bottom, transparent, #f4d0d8); }
+.t-indigo       .photo-ring::after { background: linear-gradient(to bottom, transparent, #252c40); }
+.t-cross_blue   .photo-ring::after { background: linear-gradient(to bottom, transparent, #c0d8f0); }
+.t-cross_violet .photo-ring::after { background: linear-gradient(to bottom, transparent, #d8d0f0); }
+.t-ocean        .photo-ring::after { background: linear-gradient(to bottom, transparent, #c8ddf0); }
+.t-lavender     .photo-ring::after { background: linear-gradient(to bottom, transparent, #e0d8f0); }
+.t-night        .photo-ring::after { background: linear-gradient(to bottom, transparent, #0a1428); }
+.t-ink          .photo-ring::after { background: linear-gradient(to bottom, transparent, #d8d8d0); }
+.t-pine         .photo-ring::after { background: linear-gradient(to bottom, transparent, #d0dac8); }
+.t-autumn       .photo-ring::after { background: linear-gradient(to bottom, transparent, #e8d8c0); }
+
+.photo-ring img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+  display: block;
+}
+.ph { font-size: 48px; opacity: 0.4; margin-bottom: 20px; }
 
 /* ── Text content ── */
 .body { flex: 1; padding: 0 24px; }
