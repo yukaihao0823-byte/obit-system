@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>電子訃聞</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans TC', sans-serif; min-height: 100vh; }
+
+body.t1 { background: linear-gradient(160deg,#dce8dc,#c8d8c8,#b8ccc0); }
+body.t2 { background: linear-gradient(160deg,#1e3c24,#2a5030,#1a3020); }
+body.t3 { background: linear-gradient(160deg,#f0d0d8,#e0b8c4,#c898a8); }
+body.t4 { background: linear-gradient(160deg,#060e1c,#0e1828,#0a1420); }
+body.t5 { background: linear-gradient(160deg,#c89048,#a07030,#785020); }
+body.t6 { background: linear-gradient(160deg,#dce8f8,#c0d8f0,#a0c0e8); }
+body.t7 { background: linear-gradient(160deg,#2a1a3a,#3a2a4a,#1a0a2a); }
+body.t8 { background: linear-gradient(160deg,#f5e8e0,#e8d0c0,#d8b8a0); }
+body.t9 { background: linear-gradient(160deg,#1a2a1a,#2a3a2a,#0a1a0a); }
+body.t10 { background: linear-gradient(160deg,#3a2a1a,#4a3a2a,#2a1a0a); }
+
+.wrap { max-width: 420px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+
+.hero { height: 185px; position: relative; overflow: hidden; flex-shrink: 0; }
+.t1 .hero { background: linear-gradient(145deg,#c8d8c8,#88a888); }
+.t2 .hero { background: linear-gradient(145deg,#2a5a30,#163820); }
+.t3 .hero { background: linear-gradient(145deg,#e8a8b8,#c87090); }
+.t4 .hero { background: linear-gradient(145deg,#1e3060,#0e1828); }
+.t5 .hero { background: linear-gradient(145deg,#d4a96a,#9a6828); }
+.t6 .hero { background: linear-gradient(145deg,#4090d0,#2070b0); }
+.t7 .hero { background: linear-gradient(145deg,#6040a0,#301060); }
+.t8 .hero { background: linear-gradient(145deg,#c09070,#806040); }
+.t9 .hero { background: linear-gradient(145deg,#304030,#102010); }
+.t10 .hero { background: linear-gradient(145deg,#806040,#503020); }
+
+.hero-deco { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 80px; opacity: 0.15; letter-spacing: 20px; }
+.hero-body { position: absolute; bottom: 0; left: 0; right: 0; padding: 0 24px 20px; text-align: center; }
+.hero-title { font-family: 'Noto Serif TC', serif; font-size: 24px; font-weight: 700; letter-spacing: 5px; text-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+.hero-sub { font-size: 12px; letter-spacing: 3px; opacity: 0.8; margin-top: 4px; }
+.t1 .hero-title,.t2 .hero-title,.t4 .hero-title,.t5 .hero-title,.t6 .hero-title,.t7 .hero-title,.t9 .hero-title,.t10 .hero-title { color: white; }
+.t3 .hero-title,.t8 .hero-title { color: rgba(80,20,40,0.9); }
+.t1 .hero-sub,.t2 .hero-sub,.t4 .hero-sub,.t5 .hero-sub,.t6 .hero-sub,.t7 .hero-sub,.t9 .hero-sub,.t10 .hero-sub { color: rgba(255,255,255,0.75); }
+.t3 .hero-sub,.t8 .hero-sub { color: rgba(80,20,40,0.6); }
+
+.photo-wrap { display: flex; justify-content: center; margin-top: -48px; z-index: 10; position: relative; margin-bottom: 12px; }
+.photo-ring { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; }
+.t1 .photo-ring { border: 5px solid white; background: #c8d8c8; }
+.t2 .photo-ring { border: 5px solid #4a8a4e; background: #2a5030; }
+.t3 .photo-ring { border: 5px solid white; background: #f0c0d0; }
+.t4 .photo-ring { border: 5px solid #b8965a; background: #1e3060; }
+.t5 .photo-ring { border: 5px solid #ffe8a8; background: #d4a050; }
+.t6 .photo-ring { border: 5px solid white; background: #4090d0; }
+.t7 .photo-ring { border: 5px solid #c0a0ff; background: #4020a0; }
+.t8 .photo-ring { border: 5px solid #e0c0a0; background: #a07050; }
+.t9 .photo-ring { border: 5px solid #80c080; background: #204020; }
+.t10 .photo-ring { border: 5px solid #d4a96a; background: #604020; }
+.photo-ring img { width: 100%; height: 100%; object-fit: cover; }
+.ph { font-size: 36px; opacity: 0.5; }
+
+.body { flex: 1; padding: 0 24px; }
+.dname { font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 700; letter-spacing: 4px; text-align: center; margin-bottom: 4px; }
+.ddates { font-size: 12px; letter-spacing: 2px; text-align: center; margin-bottom: 14px; opacity: 0.65; }
+.t1 .dname,.t1 .ddates { color: #1e3a22; }
+.t2 .dname,.t2 .ddates { color: rgba(255,255,255,0.95); }
+.t3 .dname,.t3 .ddates { color: #5e1e34; }
+.t4 .dname,.t4 .ddates { color: #d8e4f8; }
+.t5 .dname,.t5 .ddates { color: rgba(255,255,255,0.95); }
+.t6 .dname,.t6 .ddates { color: #1a3060; }
+.t7 .dname,.t7 .ddates { color: #e0d0ff; }
+.t8 .dname,.t8 .ddates { color: #4a2a0a; }
+.t9 .dname,.t9 .ddates { color: #c0ffc0; }
+.t10 .dname,.t10 .ddates { color: #ffe0c0; }
+
+.msg { border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; font-size: 13px; line-height: 1.9; text-align: center; font-family: 'Noto Serif TC', serif; font-style: italic; }
+.t1 .msg { background: rgba(255,255,255,0.45); color: #2a4a2e; border: 1px solid rgba(138,170,138,0.3); }
+.t2 .msg { background: rgba(255,255,255,0.08); color: rgba(200,240,200,0.9); border: 1px solid rgba(255,255,255,0.12); }
+.t3 .msg { background: rgba(255,255,255,0.4); color: #7a3448; border: 1px solid rgba(216,120,144,0.3); }
+.t4 .msg { background: rgba(184,150,90,0.08); color: rgba(200,220,255,0.85); border: 1px solid rgba(184,150,90,0.2); }
+.t5 .msg { background: rgba(255,255,255,0.12); color: rgba(255,248,220,0.9); border: 1px solid rgba(255,220,120,0.25); }
+.t6 .msg { background: rgba(255,255,255,0.4); color: #1a3060; border: 1px solid rgba(64,128,192,0.3); }
+.t7 .msg { background: rgba(192,160,255,0.1); color: #e0d0ff; border: 1px solid rgba(192,160,255,0.2); }
+.t8 .msg { background: rgba(255,255,255,0.3); color: #4a2a0a; border: 1px solid rgba(160,112,64,0.3); }
+.t9 .msg { background: rgba(128,255,128,0.08); color: #c0ffc0; border: 1px solid rgba(128,255,128,0.15); }
+.t10 .msg { background: rgba(255,200,128,0.1); color: #ffe0c0; border: 1px solid rgba(255,200,128,0.2); }
+
+.div { height: 1px; margin: 0 0 14px; opacity: 0.2; }
+.t1 .div { background: #4a6a4e; } .t2 .div { background: #aaccaa; } .t3 .div { background: #d87890; }
+.t4 .div { background: #b8965a; } .t5 .div { background: rgba(255,220,140,0.6); } .t6 .div { background: #4090d0; }
+.t7 .div { background: #8060c0; } .t8 .div { background: #a07050; } .t9 .div { background: #60a060; } .t10 .div { background: #b8965a; }
+
+.sect { font-size: 12px; font-weight: 600; letter-spacing: 3px; text-align: center; margin-bottom: 12px; }
+.t1 .sect { color: #2a4a2e; } .t2 .sect { color: rgba(180,240,180,0.9); } .t3 .sect { color: #6e2840; }
+.t4 .sect { color: #b8965a; } .t5 .sect { color: rgba(255,240,160,0.9); } .t6 .sect { color: #1a3060; }
+.t7 .sect { color: #c0a0ff; } .t8 .sect { color: #6a3a0a; } .t9 .sect { color: #80c080; } .t10 .sect { color: #d4a96a; }
+
+.fam { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-bottom: 14px; }
+.fc { padding: 5px 13px; border-radius: 20px; font-size: 12px; letter-spacing: 1px; }
+.t1 .fc { background: rgba(255,255,255,0.55); color: #2a4a2e; border: 1px solid rgba(100,150,100,0.25); }
+.t2 .fc { background: rgba(255,255,255,0.08); color: rgba(200,255,200,0.85); border: 1px solid rgba(255,255,255,0.15); }
+.t3 .fc { background: rgba(255,255,255,0.45); color: #7a3040; border: 1px solid rgba(200,100,130,0.2); }
+.t4 .fc { background: rgba(184,150,90,0.1); color: rgba(200,220,255,0.85); border: 1px solid rgba(184,150,90,0.25); }
+.t5 .fc { background: rgba(255,255,255,0.1); color: rgba(255,248,210,0.9); border: 1px solid rgba(255,220,120,0.25); }
+.t6 .fc { background: rgba(255,255,255,0.4); color: #1a3060; border: 1px solid rgba(64,128,192,0.3); }
+.t7 .fc { background: rgba(192,160,255,0.1); color: #e0d0ff; border: 1px solid rgba(192,160,255,0.2); }
+.t8 .fc { background: rgba(255,255,255,0.3); color: #4a2a0a; border: 1px solid rgba(160,112,64,0.3); }
+.t9 .fc { background: rgba(128,255,128,0.08); color: #c0ffc0; border: 1px solid rgba(128,255,128,0.2); }
+.t10 .fc { background: rgba(255,200,128,0.1); color: #ffe0c0; border: 1px solid rgba(255,200,128,0.2); }
+
+.ir { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 13px; line-height: 1.7; }
+.ii { font-size: 14px; flex-shrink: 0; width: 20px; text-align: center; }
+.t1 .it { color: #3a5a3e; } .t2 .it { color: rgba(200,240,200,0.85); } .t3 .it { color: #7a3448; }
+.t4 .it { color: rgba(190,210,245,0.9); } .t5 .it { color: rgba(255,248,220,0.9); } .t6 .it { color: #1a3060; }
+.t7 .it { color: #e0d0ff; } .t8 .it { color: #4a2a0a; } .t9 .it { color: #c0ffc0; } .t10 .it { color: #ffe0c0; }
+
+.nav-btn { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 16px 24px 0; padding: 13px; border: none; border-radius: 12px; font-family: 'Noto Serif TC', serif; font-size: 14px; letter-spacing: 2px; cursor: pointer; text-decoration: none; box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+.t1 .nav-btn { background: #2a4a2e; color: white; }
+.t2 .nav-btn { background: rgba(180,255,180,0.12); color: rgba(200,255,200,0.95); border: 1px solid rgba(200,255,200,0.2); }
+.t3 .nav-btn { background: #6e2840; color: white; }
+.t4 .nav-btn { background: #b8965a; color: #0e1828; font-weight: 700; }
+.t5 .nav-btn { background: rgba(255,255,255,0.15); color: rgba(255,248,210,0.95); border: 1px solid rgba(255,220,120,0.3); }
+.t6 .nav-btn { background: #2070b0; color: white; }
+.t7 .nav-btn { background: #6040a0; color: white; }
+.t8 .nav-btn { background: #a07050; color: white; }
+.t9 .nav-btn { background: #204020; color: #c0ffc0; border: 1px solid #80c080; }
+.t10 .nav-btn { background: #b8965a; color: #2a1a0a; }
+
+.share-bar { display: flex; gap: 8px; padding: 12px 24px; }
+.sc { flex: 1; padding: 9px 7px; border-radius: 10px; border: none; cursor: pointer; font-size: 12px; font-family: 'Noto Sans TC', sans-serif; display: flex; align-items: center; justify-content: center; gap: 4px; letter-spacing: 1px; }
+.t1 .sc,.t3 .sc,.t6 .sc,.t8 .sc { background: rgba(255,255,255,0.5); color: #333; }
+.t2 .sc,.t4 .sc,.t5 .sc,.t7 .sc,.t9 .sc,.t10 .sc { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+
+.foot { padding: 12px 24px 32px; text-align: center; font-size: 11px; letter-spacing: 2px; opacity: 0.3; }
+.t1 .foot,.t3 .foot,.t6 .foot,.t8 .foot { color: #333; }
+.t2 .foot,.t4 .foot,.t5 .foot,.t7 .foot,.t9 .foot,.t10 .foot { color: white; }
+
+.loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 14px; color: rgba(255,255,255,0.4); }
+.loading p { font-family: 'Noto Serif TC', serif; font-size: 15px; letter-spacing: 3px; }
+.err-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 14px; text-align: center; padding: 40px; }
+.err-wrap h2 { font-family: 'Noto Serif TC', serif; font-size: 20px; letter-spacing: 3px; color: rgba(255,255,255,0.6); }
+.err-wrap p { font-size: 13px; color: rgba(255,255,255,0.3); line-height: 1.8; }
+</style>
+</head>
+<body class="t4">
+<div class="loading" id="ls"><div style="font-size:30px">🕊️</div><p>載入中</p></div>
+<div class="wrap" id="wrap" style="display:none"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const cfg = document.createElement('script');
+cfg.src = 'firebase-config.js';
+document.head.appendChild(cfg);
+await new Promise(r => cfg.onload = r);
+
+const app = initializeApp(FIREBASE_CONFIG);
+const db = getFirestore(app);
+const ls = document.getElementById('ls');
+const wrap = document.getElementById('wrap');
+
+const THEMES = {
+  white:'t1', green:'t2', pink:'t3', dark:'t4', gold:'t5',
+  blue:'t6', violet:'t7', warm:'t8', sage:'t9', mocha:'t10'
+};
+const DECO = {
+  t1:'🌿🌸🌿', t2:'🌿🌱🌿', t3:'🌸🌷🌸', t4:'✦⋆✦', t5:'❀✿❀',
+  t6:'🌊💙🌊', t7:'✨🌙✨', t8:'🍂🌾🍂', t9:'🌲🍃🌲', t10:'☕🍵☕'
+};
+
+const id = new URLSearchParams(location.search).get('id');
+
+if (!id) {
+  showErr('找不到訃聞','請確認連結是否正確');
+} else {
+  try {
+    const snap = await getDoc(doc(db,'cases',id));
+    ls.style.display = 'none';
+    wrap.style.display = 'flex';
+    if (!snap.exists()) {
+      showErr('此訃聞不存在','連結可能已失效');
+    } else {
+      render({id, ...snap.data()});
+    }
+  } catch(e) {
+    showErr('載入失敗', e.message);
+  }
+}
+
+function showErr(title, msg) {
+  ls.style.display = 'none';
+  wrap.style.display = 'flex';
+  wrap.innerHTML = '<div class="err-wrap"><div style="font-size:46px">🕊️</div><h2>'+title+'</h2><p>'+msg+'</p></div>';
+}
+
+function render(c) {
+  var tc = THEMES[c.theme || 'dark'] || 't4';
+  var de = DECO[tc] || '🌸';
+  document.body.className = tc;
+  document.title = (c.name||'電子訃聞') + ' — ' + (c.title||'永遠的思念');
+
+  var ph = c.photo ? '<img src="'+c.photo+'" alt="遺照">' : '<div class="ph">👤</div>';
+  var msg = c.message ? '<div class="msg">'+c.message+'</div>' : '';
+
+  var famHtml = '';
+  if (c.family && c.family.length > 0) {
+    var chips = c.family.map(function(f) {
+      var rel = f.relation ? '<span style="opacity:.6;font-size:10px">'+f.relation+'</span> ' : '';
+      var name = f.title ? f.title + (f.name ? ' <span style="opacity:.55;font-size:11px">'+f.name+'</span>' : '') : f.name;
+      return '<div class="fc">'+rel+name+'</div>';
+    }).join('');
+    famHtml = '<div class="div"></div><div class="sect">孝眷代表</div><div class="fam">'+chips+'</div>';
+  }
+
+  var infoHtml = '';
+  if (c.ceremony) {
+    if (c.ceremony.date) infoHtml += '<div class="ir"><span class="ii">📅</span><span class="it">日期：'+c.ceremony.date+'</span></div>';
+    if (c.ceremony.time) infoHtml += '<div class="ir"><span class="ii">🕙</span><span class="it">時間：'+c.ceremony.time+'</span></div>';
+    if (c.ceremony.venue) infoHtml += '<div class="ir"><span class="ii">🏛️</span><span class="it">地點：'+c.ceremony.venue+'</span></div>';
+    if (c.ceremony.address) infoHtml += '<div class="ir"><span class="ii">📍</span><span class="it">地址：'+c.ceremony.address+'</span></div>';
+  }
+
+  var mapBtn = '';
+  if (c.ceremony && c.ceremony.address) {
+    mapBtn = '<a class="nav-btn" href="https://maps.google.com/?q='+encodeURIComponent(c.ceremony.address)+'" target="_blank">📍 導航前往告別式現場</a>';
+  }
+
+  var su = encodeURIComponent(location.href);
+  var co = typeof COMPANY_NAME !== 'undefined' ? COMPANY_NAME : '數位追思服務';
+
+  wrap.innerHTML =
+    '<div class="hero">' +
+      '<div class="hero-deco">'+de+'</div>' +
+      '<div class="hero-body">' +
+        '<div class="hero-title">'+(c.title||'永遠的思念')+'</div>' +
+        '<div class="hero-sub">'+(c.subtitle||'')+'</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="photo-wrap"><div class="photo-ring">'+ph+'</div></div>' +
+    '<div class="body">' +
+      '<div class="dname">'+(c.name||'')+'</div>' +
+      '<div class="ddates">'+(c.dates||'')+'</div>' +
+      msg +
+      '<div class="div"></div>' +
+      famHtml +
+      '<div class="sect">告別式資訊</div>' +
+      infoHtml +
+    '</div>' +
+    mapBtn +
+    '<div class="share-bar">' +
+      '<button class="sc" onclick="window.open(\'https://social-plugins.line.me/lineit/share?url='+su+'\',\'_blank\')">💬 LINE 分享</button>' +
+      '<button class="sc" onclick="navigator.clipboard.writeText(location.href).then(function(){alert(\'連結已複製\')})">🔗 複製連結</button>' +
+    '</div>' +
+    '<div class="foot">'+co+' · 數位追思服務</div>';
+}
+</script>
+</body>
+</html>
